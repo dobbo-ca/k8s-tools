@@ -1,0 +1,50 @@
+# Container variant: full | postgres
+variant: full
+
+image:
+  repository: ghcr.io/dobbo-ca/k8s-tools
+  pullPolicy: IfNotPresent
+  # Tag override — if empty, auto-resolved from variant + postgres.version
+  tag: ""
+
+postgres:
+  # Only used when variant=postgres
+  version: "17"
+
+persistence:
+  # When true, deploys as StatefulSet with PVC instead of Deployment
+  enabled: false
+  size: 10Gi
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
