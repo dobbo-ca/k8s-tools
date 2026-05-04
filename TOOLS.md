@@ -89,10 +89,10 @@ Reachability, latency, packet loss, route tracing.
 - **`mtr`** — combined ping + traceroute, live.
   - `mtr --report --report-cycles 10 host`
   - `mtr -T -P 443 host` (TCP-mode to port)
-- **`traceroute`** — hop-by-hop path discovery.
-  - `traceroute host`
-  - `traceroute -T -p 443 host`
-- **`tracepath`** — like traceroute, no root needed.
+- **`tcptraceroute`** — TCP-based hop discovery (works through firewalls that drop ICMP/UDP).
+  - `tcptraceroute host 443`
+- **`tracepath`** — like traceroute, no root needed (from iputils).
+  - `tracepath host`
 
 **Common scenarios:**
 - Latency to upstream: `mtr --report host`

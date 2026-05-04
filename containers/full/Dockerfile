@@ -27,7 +27,7 @@ RUN apk add --no-cache \
     # Network/Routing
     iputils \
     mtr \
-    traceroute \
+    tcptraceroute \
     # Port/Socket
     netcat-openbsd \
     iproute2 \
@@ -37,6 +37,8 @@ RUN apk add --no-cache \
     jq \
     yq \
     bash \
+    coreutils \
+    procps \
     less \
     strace \
     tcpdump \
@@ -46,12 +48,13 @@ RUN apk add --no-cache \
     file \
     ca-certificates
 
-# Install sslscan from source (not in Wolfi repos)
-RUN apk add --no-cache build-base git && \
+# Install sslscan from source (not in Wolfi repos). Links dynamically against
+# system OpenSSL — keeps image small and tracks the system's TLS lib for patches.
+RUN apk add --no-cache build-base git openssl-dev && \
     git clone --depth 1 https://github.com/rbsec/sslscan.git /tmp/sslscan && \
-    cd /tmp/sslscan && make static && mv sslscan /usr/local/bin/ && \
+    cd /tmp/sslscan && make && mv sslscan /usr/local/bin/ && \
     cd / && rm -rf /tmp/sslscan && \
-    apk del build-base git
+    apk del build-base git openssl-dev
 
 # Install testssl.sh
 RUN apk add --no-cache git && \
