@@ -21,7 +21,7 @@ ghcr.io/dobbo-ca/k8s-tools:postgres-pg17-latest
 | Variant | Includes |
 |---|---|
 | `full` | DNS (dig, drill), TLS (openssl, sslscan, testssl), HTTP (curl, wget, nmap), network (mtr, traceroute, ping), sockets (nc, ss), tracing (tcpdump, strace), bandwidth (iperf3), JSON/YAML (jq, yq), editor (nvim) |
-| `postgres-pg{15,16,17}` | Everything in `full` plus psql, pg_dump, pg_restore, pgbench, pgBackRest, WAL-G, pgCenter, pgBadger |
+| `postgres-pg{15,16,17}` | Everything in `full` plus psql, pg_dump, pg_restore, pgbench, WAL-G, pgCenter (amd64 only), pgBadger. pgBackRest deferred — not in Wolfi APK yet. |
 
 ### Tag scheme (CalVer)
 

@@ -188,9 +188,6 @@ Client tools, backup/restore, monitoring, log analysis.
   - `pg_dump -h host -U user -Fc -d db > backup.dump` (custom format)
 - **`pg_restore`** — restore custom-format dumps.
   - `pg_restore -h host -U user -d db backup.dump`
-- **`pgbackrest`** — production-grade backup tool.
-  - `pgbackrest --stanza=main backup`
-  - `pgbackrest --stanza=main info`
 - **`wal-g`** — WAL archiving / point-in-time recovery.
   - `wal-g backup-list`
   - `wal-g backup-push /var/lib/postgresql/data`
@@ -200,7 +197,8 @@ Client tools, backup/restore, monitoring, log analysis.
 - **`pgbench`** — benchmarking tool.
   - `pgbench -i -h host -U user -d db` (initialize)
   - `pgbench -h host -U user -d db -c 10 -T 60` (10 clients, 60s)
-- **`pgcenter`** — top-like real-time stats.
+- **`pgcenter`** — top-like real-time stats. **amd64 only** (upstream
+  ships no arm64 binary; on arm64 the command exits with a friendly error).
   - `pgcenter top -h host -U user -d db`
 - **`pgbadger`** — log analyzer, generates HTML report.
   - `pgbadger /path/to/postgresql.log -o report.html`
