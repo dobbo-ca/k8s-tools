@@ -74,6 +74,16 @@ COPY --from=builder /sleeper /usr/local/bin/sleeper
 # Copy TOOLS.md into the container
 COPY TOOLS.md /TOOLS.md
 
+# Welcome banner for interactive shells. Wolfi's /etc/profile sources
+# /etc/profile.d/*.sh for login shells; we add /etc/bash.bashrc so
+# `kubectl exec -it -- bash` (non-login interactive) sees it too.
+COPY containers/full/banner.sh /etc/profile.d/k8s-tools-banner.sh
+RUN printf '%s\n' \
+    'case $- in *i*) ;; *) return ;; esac' \
+    'for f in /etc/profile.d/*.sh; do [ -r "$f" ] && . "$f"; done' \
+    > /etc/bash.bashrc && \
+    chmod 0644 /etc/profile.d/k8s-tools-banner.sh /etc/bash.bashrc
+
 USER 65534:65534
 
 ENTRYPOINT ["/usr/local/bin/sleeper"]
