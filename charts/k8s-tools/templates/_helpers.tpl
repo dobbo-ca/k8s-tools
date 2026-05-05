@@ -50,13 +50,15 @@ Service account name
 {{- end }}
 
 {{/*
-Resolve image tag from variant + postgres version
+Resolve image tag from variant + postgres version.
+variant=full         → full-latest
+variant=pg + ver=NN  → pg-NN-latest
 */}}
 {{- define "k8s-tools.imageTag" -}}
 {{- if .Values.image.tag }}
 {{- .Values.image.tag }}
-{{- else if eq .Values.variant "postgres" }}
-{{- printf "postgres-pg%s-latest" .Values.postgres.version }}
+{{- else if eq .Values.variant "pg" }}
+{{- printf "pg-%v-latest" .Values.postgres.version }}
 {{- else }}
 {{- printf "full-latest" }}
 {{- end }}

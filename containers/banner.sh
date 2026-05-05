@@ -25,6 +25,9 @@ EOF
 if command -v psql >/dev/null 2>&1; then
   echo '  Postgres    psql pg_dump pg_restore pgbench wal-g pgcenter pgbadger'
 fi
+if command -v python >/dev/null 2>&1; then
+  echo '  Python      python pip  (psycopg pgcli rich click tenacity)'
+fi
 
 cat <<'EOF'
 

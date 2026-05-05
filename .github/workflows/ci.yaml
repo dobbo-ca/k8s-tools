@@ -16,27 +16,20 @@ jobs:
       matrix:
         include:
           - variant: full
-            context: .
             dockerfile: containers/full/Dockerfile
             build-args: ""
-          - variant: postgres-pg15
-            context: .
-            dockerfile: containers/postgres/Dockerfile
-            build-args: |
-              PG_MAJOR=15
-              FULL_IMAGE=ghcr.io/${{ github.repository }}:full-ci-${{ github.sha }}
-          - variant: postgres-pg16
-            context: .
-            dockerfile: containers/postgres/Dockerfile
-            build-args: |
-              PG_MAJOR=16
-              FULL_IMAGE=ghcr.io/${{ github.repository }}:full-ci-${{ github.sha }}
-          - variant: postgres-pg17
-            context: .
-            dockerfile: containers/postgres/Dockerfile
-            build-args: |
-              PG_MAJOR=17
-              FULL_IMAGE=ghcr.io/${{ github.repository }}:full-ci-${{ github.sha }}
+          - variant: pg-15
+            dockerfile: containers/pg/Dockerfile
+            build-args: PG_MAJOR=15
+          - variant: pg-16
+            dockerfile: containers/pg/Dockerfile
+            build-args: PG_MAJOR=16
+          - variant: pg-17
+            dockerfile: containers/pg/Dockerfile
+            build-args: PG_MAJOR=17
+          - variant: pg-18
+            dockerfile: containers/pg/Dockerfile
+            build-args: PG_MAJOR=18
 
     steps:
       - name: Checkout
@@ -45,21 +38,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build full image first (for postgres variants)
-        if: startsWith(matrix.variant, 'postgres')
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: containers/full/Dockerfile
-          load: true
-          tags: ghcr.io/${{ github.repository }}:full-ci-${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
       - name: Build image
         uses: docker/build-push-action@v6
         with:
-          context: ${{ matrix.context }}
+          context: .
           file: ${{ matrix.dockerfile }}
           load: true
           tags: ghcr.io/${{ github.repository }}:${{ matrix.variant }}-ci

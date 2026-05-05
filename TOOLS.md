@@ -170,9 +170,11 @@ Capture wire traffic, trace syscalls.
 
 ---
 
-## Postgres (postgres variant only)
+## Postgres (`pg-*` variants only)
 
-Client tools, backup/restore, monitoring, log analysis.
+Client tools, backup/restore, monitoring, log analysis. Each `pg-NN` image
+ships PostgreSQL `NN` client/server binaries, so client/server protocol
+versions match perfectly.
 
 ### Connect & Query
 
@@ -202,6 +204,42 @@ Client tools, backup/restore, monitoring, log analysis.
   - `pgcenter top -h host -U user -d db`
 - **`pgbadger`** — log analyzer, generates HTML report.
   - `pgbadger /path/to/postgresql.log -o report.html`
+
+### Python (`pg-*` variants only)
+
+Python 3.13 with `python` and `pip` aliases on PATH. Installed packages:
+
+- **`psycopg`** — Postgres driver, v3, **PG-version-matched** (the `pg-NN`
+  image installs `py3-psycopg-NN`). PG15 falls back to the unsuffixed
+  package; psycopg v3 supports PG 9.6+ regardless.
+  ```python
+  import psycopg
+  with psycopg.connect("postgresql://user@host/db") as conn:
+      with conn.cursor(name="rows") as cur:        # server-side cursor
+          cur.execute("SELECT id, payload FROM big_table")
+          for row in cur:                          # streams without OOM
+              ...
+  ```
+- **`pgcli`** — interactive psql replacement with autocomplete + syntax
+  highlighting.
+  - `pgcli postgresql://user@host/db`
+- **`rich`** — pretty terminal output, progress bars (great for visibility
+  on row-by-row migrations).
+- **`click`** — CLI scaffolding for migration scripts.
+- **`tenacity`** — retry decorators for transient row failures.
+
+#### Runtime `pip install`
+
+`PIP_TARGET=/tmp/site` and `PYTHONPATH=/tmp/site` are baked in, so:
+
+```bash
+pip install boto3
+python -c 'import boto3; print(boto3.__version__)'
+```
+
+works as the unprivileged container user. Caveat: the pod's filesystem must
+not be read-only — toggle `securityContext.readOnlyRootFilesystem=false` if
+you set it. For repeatable scripts, bake deps into a custom image instead.
 
 ### Useful Diagnostic Queries
 
